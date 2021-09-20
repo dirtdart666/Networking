@@ -1,0 +1,19 @@
+banner exec ^C
+************************
+* This is a LAB Router *
+************************
+^C
+banner incoming ^C
+************************
+* This is a LAB Router *
+************************
+^C
+banner login ^C
+************************
+* This is a LAB Router *
+************************
+^C
+banner motd ^C 
+************************
+* This is a LAB Router *
+************************^C
