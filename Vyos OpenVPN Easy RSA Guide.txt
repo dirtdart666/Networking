@@ -1,0 +1,55 @@
+Ref: https://support.vyos.io/en/kb/articles/using-easy-rsa-to-generate-x-509-certificates-and-keys-2
+
+1.
+Copy easy-rsa to a config folder
+cp -r /usr/share/easy-rsa/ /config/my-easy-rsa-config
+cd /config/my-easy-rsa-config
+
+2.
+Edit var.example as required and save as var (defaults are fine for most installs)
+
+3. Init PKI
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa init-pki
+
+4. Build CA
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa build-ca
+
+5. Build DH 
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa gen-dh
+
+6. Generate Server key
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa build-server-full <server name>
+
+7. Generate Client key
+vyos@lab-router:/config/my-easy-rsa-config$ ./easyrsa build-client-full client1
+
+
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa init-pki
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa build-ca
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa gen-dh
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa build-server-full <server name>
+vyos@vyos:/config/my-easy-rsa-config$ ./easyrsa build-client-full <client name>
+
+
+lab-router VPN Details
+
+Public IP 192.168.1.4
+Internal: 10.1.1.0/24
+
+
+set interface openvpn vtun0 mode 'server'
+set interface openvpn vtun0 server subnet 10.23.1.0/24
+set interface openvpn vtun0 persistent-tunnel
+set interface openvpn vtun0 protocol udp
+set interface openvpn vtun0 tls ca-cert-file '/config/auth/ovpn/ca.cert'
+set interface openvpn vtun0 tls cert-file '/config/auth/ovpn/lab-router.crt'
+set interface openvpn vtun0 tls dh-file '/config/auth/ovpn/dh.pem'
+set interface openvpn vtun0 tls key-file '/config/auth/ovpn/lab-router.key'
+set interfaces openvpn vtun0 server push-route 1.1.1.0/24
+
+
+vyos@vyos:/config/my-easy-rsa-config$ sudo mkdir /config/auth/ovpn
+vyos@vyos:/config/my-easy-rsa-config$ sudo cp keys/ca.crt /config/auth/ovpn
+vyos@vyos:/config/my-easy-rsa-config$ sudo cp keys/dh2048.pem /config/auth/ovpn
+vyos@vyos:/config/my-easy-rsa-config$ sudo cp keys/central.key /config/auth/ovpn
+vyos@vyos:/config/my-easy-rsa-config$ sudo cp keys/central.crt /config/auth/ovpn
